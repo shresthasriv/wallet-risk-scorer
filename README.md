@@ -2,8 +2,6 @@
 
 This project implements a comprehensive risk scoring system for analyzing wallet behavior on the Compound DeFi protocol across multiple blockchain networks.
 
-## 🎯 Assignment Deliverables
-
 ### 1. Risk Scores Output
 - **Format**: CSV file with columns `wallet_id` and `score`
 - **Range**: Risk scores from 0-1000
@@ -20,7 +18,7 @@ This project implements a comprehensive risk scoring system for analyzing wallet
 - Advanced risk scoring with continuous mathematical functions
 - Modular architecture for extensibility
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Prerequisites
 - Python 3.10+
@@ -45,7 +43,7 @@ python main.py
 - **Input**: `wallets.csv` - List of wallet addresses to analyze
 - **Output**: `wallet_risk_scores.csv` - Risk scores for each wallet
 
-## 📊 Data Collection Method
+## Data Collection Method
 
 ### Multi-Chain Data Sources
 - **Primary API**: Etherscan V2 unified endpoint
@@ -144,7 +142,7 @@ final_score = (
 score = min(1000, max(0, int(final_score * 1000)))
 ```
 
-## 🎯 Risk Score Interpretation
+## Risk Score Interpretation
 
 | Score Range | Risk Level | Profile Description |
 |-------------|------------|-------------------|
@@ -165,7 +163,7 @@ Analysis: 26 transactions, 8% risky functions, $100 max exposure
 Profile: Experienced but conservative user
 ```
 
-## 🔍 Risk Indicators Justification
+## Risk Indicators Justification
 
 ### Primary Indicators (Critical for DeFi)
 1. **Liquidation History**: 
@@ -198,7 +196,7 @@ Profile: Experienced but conservative user
 2. **Consistent Patterns**: Predictable, systematic behavior
 3. **Multi-Network Activity**: Cross-chain DeFi experience
 
-## 🏗️ Architecture & Design
+## Architecture & Design
 
 ### Modular Component Structure
 ```
