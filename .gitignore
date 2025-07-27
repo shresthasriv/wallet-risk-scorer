@@ -129,7 +129,6 @@ dmypy.json
 .pyre/
 
 # Project-specific files
-wallet_risk_scores.csv
 *.log
 
 # API keys and sensitive data
