@@ -1,6 +1,7 @@
 import requests
 import time
 from typing import List
+from web3 import Web3
 from core.interfaces import DataProvider, Transaction
 
 
@@ -9,31 +10,15 @@ class EtherscanV2DataProvider(DataProvider):
         self.api_key = api_key
         self.base_url = "https://api.etherscan.io/v2/api"
         
+        # Compound V2 Comptroller address on Ethereum mainnet
+        self.comptroller_address = "0x3d9819210a31b4961b30ef54be2aed79b9c9cd3b"
+        
         # Chain ID mapping - using standard EVM chain IDs
         self.chain_configs = {
             1: {  # Ethereum Mainnet
                 'name': 'ethereum',
                 'compound_v2_addresses': {
-                    "0x3d9819210a31b4961b30ef54be2aed79b9c9cd3b": "Comptroller",
-                    "0x4ddc2d193948926d02f9b1fe9e1daa0718270ed5": "cETH",
-                    "0x5d3a536e4d6dbd6114cc1ead35777bab948e3643": "cDAI",
-                    "0x39aa39c021dfbae8fac545936693ac917d5e7563": "cUSDC",
-                    "0xf650c3d88d12db855b8bf7d11be6c55a4e07dcc9": "cUSDT",
-                    "0xc11b1268c1a384e55c48c2391d8d480264a3a7f4": "cWBTC",
-                    "0x35a18000230da775cac24873d00ff85bccded550": "cUNI",
-                    "0x70e36f6bf80a52b3b46b3af8e106cc0ed743e8e4": "cCOMP",
-                    "0xe65cdb6479bac1e22340e4e755fae7e509ecd06c": "cAAVE",
-                    "0x95b4ef2869ebd94beb4eee400a99824bf5dc325b": "cMKR",
-                    "0x4b0181102a0112a2ef11abee5563bb4a3176c9d7": "cSUSHI",
-                    "0x6c8c6b02e7b2be14d4fa6022dfd6d75921d90e4e": "cBAT",
-                    "0x7713dd9ca933848f6819f38b8352d9a15ea73f67": "cFEI",
-                    "0xface851a4921ce59e912d19329929ce6da6eb0c7": "cLINK",
-                    "0x12392f67bdf24fae0af363c24ac620a2f67dad86": "cTUSD",
-                    "0x041171993284df560249b57358f931d9eb7b925d": "cUSDP",
-                    "0x80a2ae356fc9ef4305676f7a3e2ed04e12c33946": "cYFI",
-                    "0xb3319f5d18bc0d84dd1b4825dcde5d5f7266d407": "cZRX",
-                    "0x158079ee67fce2f58472a96584a73c7ab9ac95c1": "cREP",
-                    "0xf5dce57282a584d2746faf1593d3121fcac444dc": "cSAI"  # Legacy SAI market
+                    # This will be populated dynamically via web3
                 },
                 'compound_v3_addresses': {
                     "0xc3d688b66703497daa19211eedff47f25384cdc3": "cUSDCv3",
@@ -45,45 +30,94 @@ class EtherscanV2DataProvider(DataProvider):
                 'name': 'polygon',
                 'compound_v2_addresses': {},  # No V2 on Polygon
                 'compound_v3_addresses': {
-                    "0xf25212e676d1f7f89cd72ffee66158f541246445": "cUSDCv3_Polygon",
-                    "0x195acfcf9f06e43410a3ad177665f358e659cda6": "Rewards_Polygon",
-                    "0x45d3d13a213921f734de504451345735832356a3": "cWETHv3_Polygon"
+                    "0xf25212e676d1f7f89cd72ffee66158f541246445": "cUSDCv3"
                 }
             },
             42161: {  # Arbitrum One
                 'name': 'arbitrum',
                 'compound_v2_addresses': {},  # No V2 on Arbitrum
                 'compound_v3_addresses': {
-                    "0xA5EDBDD22e25356435551669715B6CD4aC5A44BB": "cUSDCv3_Arbitrum",
-                    "0x9c4ec768c28520b50860ea7a15bd7213a9ff58bf": "cUSDC.e_v3_Arbitrum",
-                    "0x82af49447d8a07e3bd95bd0d56f35241523fbab1": "cWETHv3_Arbitrum"
+                    "0xa5edbdd22e25356435551669715b6cd4ac5a44bb": "cUSDCv3",
+                    "0x9c4ec768c28520b50860ea7a15bd7213a9ff58bf": "cUSDCev3"
                 }
             },
             8453: {  # Base
                 'name': 'base',
                 'compound_v2_addresses': {},  # No V2 on Base
                 'compound_v3_addresses': {
-                    "0x46e6b214b524310239732D51387075E0e70970bf": "cUSDCv3_Base",
-                    "0x9c4ec768c28520b50860ea7a15bd7213a9ff58bf": "cUSDbCv3_Base",
-                    "0x4200000000000000000000000000000000000006": "cWETHv3_Base"
+                    "0x46e6b214b524310239732d51387075e0e70970bf": "cUSDCv3",
+                    "0x9c4ec768c28520b50860ea7a15bd7213a9ff58bf": "cUSDbCv3"
                 }
             },
             10: {  # Optimism
                 'name': 'optimism',
                 'compound_v2_addresses': {},  # No V2 on Optimism
                 'compound_v3_addresses': {
-                    "0x2e44e174f7d53f0212823acc11c01a11d58c5bcb": "cUSDCv3_Optimism",
-                    "0x4200000000000000000000000000000000000006": "cWETHv3_Optimism"
+                    "0x2e44e174f7d53f0212823acc11c01a11d58c5bcb": "cUSDCv3"
                 }
             },
             534352: {  # Scroll
                 'name': 'scroll',
                 'compound_v2_addresses': {},  # No V2 on Scroll
                 'compound_v3_addresses': {
-                    "0xB2f97c1Bd3bf02f5e74d13f02E3e26F93D77CE44": "cUSDCv3_Scroll"
+                    "0xb2f97c1bd3bf02f5e74d13f02e3e26f93d77ce44": "cUSDCv3"
                 }
             }
         }
+        
+        # Fetch dynamic Compound V2 markets on initialization
+        self._fetch_compound_v2_markets()
+
+    def _fetch_compound_v2_markets(self):
+        """
+        Dynamically fetch all Compound V2 market addresses from the Comptroller contract
+        using web3 and a public RPC endpoint.
+        """
+        print("Fetching all Compound V2 market addresses dynamically...")
+        
+        try:
+            # Use a public Ethereum RPC endpoint
+            rpc_url = "https://eth.llamarpc.com"
+            w3 = Web3(Web3.HTTPProvider(rpc_url, request_kwargs={'timeout': 10}))
+            
+            # Comptroller ABI - we only need the getAllMarkets function
+            comptroller_abi = [
+                {
+                    "constant": True,
+                    "inputs": [],
+                    "name": "getAllMarkets",
+                    "outputs": [{"name": "", "type": "address[]"}],
+                    "payable": False,
+                    "stateMutability": "view",
+                    "type": "function"
+                }
+            ]
+            
+            # Create contract instance
+            comptroller = w3.eth.contract(
+                address=Web3.to_checksum_address(self.comptroller_address),
+                abi=comptroller_abi
+            )
+            
+            # Call getAllMarkets function
+            markets = comptroller.functions.getAllMarkets().call()
+            
+            # Convert to our format (address -> name mapping)
+            v2_addresses = {}
+            for i, market_address in enumerate(markets):
+                market_address_lower = market_address.lower()
+                v2_addresses[market_address_lower] = f"cToken_{i}"
+            
+            # Add the comptroller itself
+            v2_addresses[self.comptroller_address.lower()] = "Comptroller"
+            
+            # Update the chain config
+            self.chain_configs[1]['compound_v2_addresses'] = v2_addresses
+            
+            print(f"Successfully loaded {len(v2_addresses)} Compound V2 addresses")
+            
+        except Exception as e:
+            print(f"Error fetching Compound V2 markets via web3: {e}")
 
     def get_wallet_transactions(self, wallet_address: str) -> List[Transaction]:
         all_transactions = []
