@@ -37,7 +37,7 @@ class EtherscanV2DataProvider(DataProvider):
                 'name': 'arbitrum',
                 'compound_v2_addresses': {},  # No V2 on Arbitrum
                 'compound_v3_addresses': {
-                    "0xa5edbdd22e25356435551669715b6cd4ac5a44bb": "cUSDCv3",
+                    "0xa5edbdd9646f8dff606d7448e414884c7d905dca": "cUSDCv3",
                     "0x9c4ec768c28520b50860ea7a15bd7213a9ff58bf": "cUSDCev3"
                 }
             },

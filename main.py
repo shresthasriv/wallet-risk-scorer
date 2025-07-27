@@ -45,7 +45,7 @@ def main():
             from core.interfaces import WalletRiskScore
             scores.append(WalletRiskScore(wallet_id=wallet_address, score=500))
         
-        time.sleep(1.0)
+        time.sleep(0.2)
     
     CSVExporter.export_scores(scores, output_file)
     print(f"Risk scores exported to {output_file}")
