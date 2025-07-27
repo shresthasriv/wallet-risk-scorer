@@ -45,28 +45,35 @@ class EtherscanV2DataProvider(DataProvider):
                 'name': 'polygon',
                 'compound_v2_addresses': {},  # No V2 on Polygon
                 'compound_v3_addresses': {
-                    "0xf25212e676d1f7f89cd72ffee66158f541246445": "cUSDCv3_Polygon"
+                    "0xf25212e676d1f7f89cd72ffee66158f541246445": "cUSDCv3_Polygon",
+                    "0x195acfcf9f06e43410a3ad177665f358e659cda6": "Rewards_Polygon",
+                    "0x45d3d13a213921f734de504451345735832356a3": "cWETHv3_Polygon"
                 }
             },
             42161: {  # Arbitrum One
                 'name': 'arbitrum',
                 'compound_v2_addresses': {},  # No V2 on Arbitrum
                 'compound_v3_addresses': {
-                    "0x9c4ec768c28520b50860ea7a15bd7213a9ff58bf": "cUSDCv3_Arbitrum"
+                    "0xA5EDBDD22e25356435551669715B6CD4aC5A44BB": "cUSDCv3_Arbitrum",
+                    "0x9c4ec768c28520b50860ea7a15bd7213a9ff58bf": "cUSDC.e_v3_Arbitrum",
+                    "0x82af49447d8a07e3bd95bd0d56f35241523fbab1": "cWETHv3_Arbitrum"
                 }
             },
             8453: {  # Base
                 'name': 'base',
                 'compound_v2_addresses': {},  # No V2 on Base
                 'compound_v3_addresses': {
-                    "0x9c4ec768c28520b50860ea7a15bd7213a9ff58bf": "cUSDbCv3_Base"
+                    "0x46e6b214b524310239732D51387075E0e70970bf": "cUSDCv3_Base",
+                    "0x9c4ec768c28520b50860ea7a15bd7213a9ff58bf": "cUSDbCv3_Base",
+                    "0x4200000000000000000000000000000000000006": "cWETHv3_Base"
                 }
             },
             10: {  # Optimism
                 'name': 'optimism',
                 'compound_v2_addresses': {},  # No V2 on Optimism
                 'compound_v3_addresses': {
-                    "0x2e44e174f7d53f0212823acc11c01a11d58c5bcb": "cUSDCv3_Optimism"
+                    "0x2e44e174f7d53f0212823acc11c01a11d58c5bcb": "cUSDCv3_Optimism",
+                    "0x4200000000000000000000000000000000000006": "cWETHv3_Optimism"
                 }
             },
             534352: {  # Scroll
